@@ -1,7 +1,6 @@
 import json
 import os
 import tkinter as tk
-from pathlib import Path
 from tkinter import filedialog
 from tkinter import messagebox
 from tkinter.ttk import Button, Label
@@ -36,13 +35,13 @@ class FlagColors(tk.Tk):
         for dirpath, _, filenames in os.walk(directory):
             for f in filenames:
                 img_path = os.path.abspath(os.path.join(dirpath, f))
+                filename = os.path.basename(f)
                 if not self.is_file_supported(img_path):
                     self.file_errors.append(
-                        {'file': Path(f).stem, 'error': f'Error: {Path(f)}. Extension not supported'})
+                        {'file': filename, 'error': f'Error: {filename}. Extension not supported'})
                     continue
                 colors = self.get_colors(img_path)
-                file_name = Path(f).stem
-                file_dict = self.create_image_entry(colors, file_name)
+                file_dict = self.create_image_entry(colors, filename)
                 collection.append(file_dict)
         return collection
 
@@ -55,7 +54,7 @@ class FlagColors(tk.Tk):
         return len(directory_files) == 0
 
     def is_file_supported(self, file):
-        file_ext = Path(file).suffix
+        file_ext = os.path.splitext(file)[1]
         return file_ext in self.img_extensions
 
     def create_image_entry(self, colors, file_name):
