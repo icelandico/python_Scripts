@@ -50,6 +50,10 @@ class FlagColors(tk.Tk):
         img = Image.open(img_path).convert("RGBA")
         return extcolors.extract_from_image(img, tolerance=33, limit=10)
 
+    def is_directory_empty(self, directory):
+        directory_files = os.listdir(directory)
+        return len(directory_files) == 0
+
     def is_file_supported(self, file):
         file_ext = Path(file).suffix
         return file_ext in self.img_extensions
@@ -64,9 +68,12 @@ class FlagColors(tk.Tk):
         return image_dict
 
     def browse_folder(self):
-        filename = filedialog.askdirectory()
-        self.folder_path.set(filename)
-        self.label_directory.config(text=f'Directory: {filename}')
+        directory = filedialog.askdirectory()
+        if self.is_directory_empty(directory):
+            messagebox.showerror("Error", "Directory is empty")
+            return
+        self.folder_path.set(directory)
+        self.label_directory.config(text=f'Directory: {directory}')
         self.extract_button.config(state='normal')
         self.remove_error_labels()
 
