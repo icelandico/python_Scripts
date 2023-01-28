@@ -83,7 +83,7 @@ class FlagColors(tk.Tk):
 
     def extract_json(self):
         collection = self.get_image_details(self.folder_path.get())
-        with open("result1.json", "w") as outfile:
+        with open("result.json", "w") as outfile:
             json.dump(collection, outfile)
         messagebox.showinfo('Info', 'Process completed!')
         self.generate_errors()
