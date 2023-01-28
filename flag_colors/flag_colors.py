@@ -50,8 +50,13 @@ class FlagColors(tk.Tk):
         return extcolors.extract_from_image(img, tolerance=33, limit=10)
 
     def is_directory_empty(self, directory):
-        directory_files = os.listdir(directory)
-        return len(directory_files) == 0
+        if any(os.scandir(directory)):
+            return False
+        self.set_directory_label_text('No folder selected')
+        return True
+
+    def set_directory_label_text(self, label_text):
+        self.label_directory.config(text=label_text)
 
     def is_file_supported(self, file):
         file_ext = os.path.splitext(file)[1]
@@ -72,7 +77,7 @@ class FlagColors(tk.Tk):
             messagebox.showerror("Error", "Directory is empty")
             return
         self.folder_path.set(directory)
-        self.label_directory.config(text=f'Directory: {directory}')
+        self.set_directory_label_text(f'Directory: {directory}')
         self.extract_button.config(state='normal')
         self.remove_error_labels()
 
