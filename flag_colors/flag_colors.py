@@ -1,5 +1,4 @@
 import json
-import logging
 import os
 import tkinter as tk
 from pathlib import Path
@@ -10,12 +9,8 @@ from tkinter.ttk import Button, Label
 import extcolors
 from PIL import Image
 
-logging.basicConfig(level=logging.DEBUG)
-logger = logging.getLogger(__name__)
-
 
 class FlagColors(tk.Tk):
-
 
     def __init__(self):
         tk.Tk.__init__(self)
@@ -35,7 +30,6 @@ class FlagColors(tk.Tk):
 
         self.label_directory = Label(self, text='No folder selected')
         self.label_directory.place(bordermode='outside', x=20, y=60)
-
 
     def get_image_details(self, directory):
         collection = []
