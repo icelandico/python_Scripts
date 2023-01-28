@@ -3,7 +3,7 @@ import os
 import tkinter as tk
 from tkinter import filedialog
 from tkinter import messagebox
-from tkinter.ttk import Button, Label
+from tkinter.ttk import Button, Label, Progressbar
 
 import extcolors
 from PIL import Image
@@ -30,10 +30,16 @@ class FlagColors(tk.Tk):
         self.label_directory = Label(self, text='No folder selected')
         self.label_directory.place(bordermode='outside', x=20, y=60)
 
+        self.progressbar = Progressbar(self, orient='horizontal', length=100)
+        self.progressbar.place(bordermode='outside', x=280, y=20)
+
     def get_image_details(self, directory):
         collection = []
         for dirpath, _, filenames in os.walk(directory):
+            filenames_to_process = len(filenames)
             for f in filenames:
+                self.progressbar['value'] += 100 / filenames_to_process
+                self.update_idletasks()
                 img_path = os.path.abspath(os.path.join(dirpath, f))
                 filename = os.path.basename(f)
                 if not self.is_file_supported(img_path):
@@ -82,9 +88,11 @@ class FlagColors(tk.Tk):
         self.remove_error_labels()
 
     def extract_json(self):
+        self.progressbar.start()
         collection = self.get_image_details(self.folder_path.get())
         with open("result.json", "w") as outfile:
             json.dump(collection, outfile)
+        self.progressbar.stop()
         messagebox.showinfo('Info', 'Process completed!')
         self.generate_errors()
         self.reset_app_state()
